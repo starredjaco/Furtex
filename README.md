@@ -2,11 +2,11 @@
 
 Post-exploitation and evasion research toolkit for Linux, built around io_uring and eBPF. No liburing, no frameworks, raw syscalls throughout.
 
-Still early. More tools and vendor coverage coming. PRs welcome.
+More tools soon. PRs are welcome.
 
 Join in Rootkit Researchers
-- https://discord.gg/66N5ZQppU7
 
+- https://discord.gg/66N5ZQppU7
 
 **For authorized research and red team engagements only. Don't run this on systems you don't own.**
 
