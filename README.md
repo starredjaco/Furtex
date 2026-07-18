@@ -477,3 +477,11 @@ sudo ./techniques/kmod_unload unload
 ## Contributing
 
 Open a PR. Single-purpose tools, raw syscalls, no new dependencies.
+
+## Legal
+
+This project is intended strictly for security research, authorized penetration testing, CTF competitions, and defensive tooling development. All techniques demonstrated here are documented in public security research and kernel documentation.
+
+**Do not use this toolkit against systems you do not own or have explicit written authorization to test.** Unauthorized use may violate the Computer Fraud and Abuse Act (CFAA), the EU Directive on Attacks Against Information Systems, and equivalent laws in your jurisdiction.
+
+The authors assume no liability for misuse. By using this software you agree that you are solely responsible for compliance with applicable laws.
