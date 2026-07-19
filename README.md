@@ -175,7 +175,7 @@ Most tools require `CAP_BPF`. `env_exfil` works unprivileged. `icmp_trigger` req
 | `bpf_link_detach` | enumerate and detach BPF links (removes LSM hooks) |
 | `link_update` | redirect a BPF link to a no-op program (hook stays visible, fires nothing) |
 | `map_freeze` | freeze a BPF map read-only via `BPF_MAP_FREEZE` (writes return -EPERM) |
-| `icmp_trigger` | `AF_PACKET` magic-packet listener; revshell via socketpair relay; listener invisible to `lsof -i`, shell process has no TCP fds |
+| `icmp_trigger` | ICMP magic-packet backdoor; spawns reverse shell via socketpair relay; masquerades as `kworker/u4:2` |
 
 ```bash
 sudo ./bpf/map_recon
